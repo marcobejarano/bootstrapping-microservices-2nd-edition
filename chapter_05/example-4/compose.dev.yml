@@ -1,0 +1,23 @@
+networks:
+  app-network:
+    driver: bridge
+    name: app-network
+
+services:
+  rabbitmq:
+    image: rabbitmq:4.0.0-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+    restart: always
+
+  alpine-test:
+    image: oven/bun:1.1.27-alpine
+    container_name: alpine-test
+    networks:
+      - app-network
+    restart: "no"
+    command: sh -c "while true; do sleep 60; done"

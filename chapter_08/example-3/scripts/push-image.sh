@@ -1,0 +1,8 @@
+set -u
+: "$CONTAINER_REGISTRY_URL"
+: "$VERSION"
+: "$REGISTRY_USERNAME"
+: "$REGISTRY_PASSWORD"
+
+echo $REGISTRY_PASSWORD | docker login $CONTAINER_REGISTRY_URL --username $REGISTRY_USERNAME --password-stdin
+docker push $CONTAINER_REGISTRY_URL/video-streaming:$VERSION

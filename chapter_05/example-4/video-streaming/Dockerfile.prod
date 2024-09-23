@@ -1,0 +1,30 @@
+FROM oven/bun:1.1.27-alpine AS base
+
+FROM base AS build
+WORKDIR /usr/src/app
+
+COPY package.json bun.lockb ./
+COPY tsconfig.json ./
+COPY ./src ./src
+COPY ./videos ./videos
+
+RUN bun install
+RUN bun bundle
+
+RUN mkdir -p /temp/prod
+COPY package.json bun.lockb /temp/prod/
+WORKDIR /temp/prod
+
+RUN bun install --production
+
+FROM base AS prod
+WORKDIR /usr/src/app
+
+COPY --from=build /temp/prod/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/videos ./dist/videos
+COPY --from=build /usr/src/app/package.json ./
+
+EXPOSE 80/tcp
+
+CMD ["bun", "start:prod"]

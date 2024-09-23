@@ -1,0 +1,20 @@
+name: Hello World
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make index.sh Executable
+        run: chmod +x ./chapter_08/example-1/index.sh
+        
+      - name: Run the Shell Script
+        run: ./chapter_08/example-1/index.sh

@@ -1,0 +1,20 @@
+{
+  "name": "video-streaming",
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "bundle": "NODE_ENV=production bun build --target=bun src/index.ts --outdir=dist",
+    "start:prod": "bun dist/index.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^4.17.21"
+  },
+  "peerDependencies": {
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "express": "^5.0.0"
+  }
+}

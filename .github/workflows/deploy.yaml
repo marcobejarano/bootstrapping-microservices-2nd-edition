@@ -1,0 +1,44 @@
+name: Deploy Microservice
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      VERSION: ${{ github.sha }}
+      CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make build-image.sh Executable
+        run: chmod +x ./chapter_08/example-3/scripts/build-image.sh
+
+      - name: Build the Docker Image
+        run: ./chapter_08/example-3/scripts/build-image.sh
+
+      - name: Make publish-image.sh Executable
+        run: chmod +x ./chapter_08/example-3/scripts/push-image.sh
+
+      - name: Publish the Docker Image to the Azure Container Registry
+        run: ./chapter_08/example-3/scripts/push-image.sh
+
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: v1.30.3
+
+      - name: Make deploy.sh Executable
+        run: chmod +x ./chapter_08/example-3/scripts/deploy.sh
+
+      - name: Deploy the Microservice
+        run: ./chapter_08/example-3/scripts/deploy.sh
