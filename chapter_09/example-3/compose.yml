@@ -1,0 +1,16 @@
+networks:
+  app-network:
+    driver: bridge
+    name: app-network
+  
+services:
+  db:
+    image: mongo:7.0.14
+    container_name: db
+    networks:
+      - app-network
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    restart: always
